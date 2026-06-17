@@ -37,3 +37,6 @@ HANDOFF_PORTFOLIO_V6.md
 ASSETS_NEEDED.md
 incoming/
 reference/
+
+# local planning notes — kept on disk to guide the build, never published
+docs/plans/
