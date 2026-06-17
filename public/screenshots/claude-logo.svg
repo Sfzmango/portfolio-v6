@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="Claude spark mark" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <radialGradient id="claudeRay" cx="50%" cy="50%" r="62%">
+      <stop offset="0%" stop-color="#cf836a"/>
+      <stop offset="58%" stop-color="#9e4332"/>
+      <stop offset="100%" stop-color="#9e4332"/>
+    </radialGradient>
+    <radialGradient id="claudeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9e4332" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#9e4332" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- soft redwood glow behind the spark on the forest-night card surface -->
+  <circle cx="160" cy="90" r="64" fill="url(#claudeGlow)"/>
+  <g fill="url(#claudeRay)" stroke="none">
+    <path d="M 154.60 86.50 L 158.40 39.60 Q 160.00 38.00 161.60 39.60 L 165.40 86.50 Q 160.00 88.90 154.60 86.50 Z" />
+    <path d="M 157.35 84.14 L 185.90 46.74 Q 188.11 46.25 188.59 48.47 L 166.44 89.98 Q 160.59 89.07 157.35 84.14 Z" />
+    <path d="M 160.94 83.63 L 205.18 67.61 Q 207.30 68.40 206.51 70.52 L 165.43 93.46 Q 161.00 89.54 160.94 83.63 Z" />
+    <path d="M 164.23 85.15 L 210.11 95.59 Q 211.47 97.40 209.66 98.76 L 162.70 95.84 Q 161.09 90.16 164.23 85.15 Z" />
+    <path d="M 166.18 88.21 L 199.14 121.80 Q 199.30 124.05 197.04 124.21 L 159.11 96.37 Q 160.83 90.72 166.18 88.21 Z" />
+    <path d="M 166.17 91.84 L 175.73 137.91 Q 174.65 139.89 172.66 138.81 L 155.80 94.88 Q 160.31 91.06 166.17 91.84 Z" />
+    <path d="M 164.20 94.88 L 147.34 138.81 Q 145.35 139.89 144.27 137.91 L 153.83 91.84 Q 159.69 91.06 164.20 94.88 Z" />
+    <path d="M 160.89 96.37 L 122.96 124.21 Q 120.70 124.05 120.86 121.80 L 153.82 88.21 Q 159.17 90.72 160.89 96.37 Z" />
+    <path d="M 157.30 95.84 L 110.34 98.76 Q 108.53 97.40 109.89 95.59 L 155.77 85.15 Q 158.91 90.16 157.30 95.84 Z" />
+    <path d="M 154.57 93.46 L 113.49 70.52 Q 112.70 68.40 114.82 67.61 L 159.06 83.63 Q 159.00 89.54 154.57 93.46 Z" />
+    <path d="M 153.56 89.98 L 131.41 48.47 Q 131.89 46.25 134.10 46.74 L 162.65 84.14 Q 159.41 89.07 153.56 89.98 Z" />
+  </g>
+  <!-- center hub: rays converge into a soft redwood core -->
+  <circle cx="160" cy="90" r="6" fill="#cf836a"/>
+</svg>

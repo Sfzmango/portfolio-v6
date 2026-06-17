@@ -1,0 +1,105 @@
+---
+import AsciiField from './islands/AsciiField.tsx';
+import { identity } from '../data/skills';
+
+const base = import.meta.env.BASE_URL;
+const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
+const resumeHref = asset('/maung-htike-resume.pdf');
+---
+
+<section id="top" class="hero relative overflow-hidden">
+  <!-- ASCII starfield back layer (client:idle island) — faint, aria-hidden, non-interactive. -->
+  <div
+    id="hero-ascii"
+    class="parallax-layer pointer-events-none absolute inset-0 -z-10 opacity-[0.62]"
+    aria-hidden="true"
+  >
+    <!-- cell ~3x the prior 13px reference → ~3x larger glyphs (variance kept).
+         This pass: density HALVED + per-glyph brightness raised in AsciiField,
+         so the wrapper opacity is raised 0.34→0.62 to make the reddish/gilt
+         field clearly MORE visible. The radial scrim below + the field staying
+         behind -z-10 keep the hero name/role/CTA fully legible. -->
+    <AsciiField client:idle cell={38} accent={0.07} speed={0.7} cx={0.5} cy={0.46} />
+  </div>
+  <!-- warm dusk scrim keeps hero copy legible over the (now brighter) field.
+       Center protection deepened slightly (0.30→0.42) so the name/role/CTA hold
+       WCAG AA contrast over any hot glyph behind the copy, without dimming the
+       field at the edges where it should read brightly. -->
+  <div
+    class="pointer-events-none absolute inset-0 -z-10"
+    aria-hidden="true"
+    style="background: radial-gradient(80% 70% at 50% 38%, rgba(13,16,13,0.42), rgba(13,16,13,0.86) 76%);"
+  >
+  </div>
+
+  <div class="container-px flex min-h-[clamp(34rem,82vh,52rem)] flex-col justify-center py-[clamp(5rem,12vh,8rem)]">
+    <div class="hero-in max-w-3xl">
+      <p class="eyebrow reveal mb-5">{identity.tagline}</p>
+
+      <h1 class="reveal font-display text-fluid-hero font-normal leading-[1.0] text-ink-strong" style="transition-delay:60ms;">
+        {identity.name}
+      </h1>
+
+      <p
+        class="role reveal mt-4 max-w-2xl text-fluid-lg"
+        style="transition-delay:120ms;"
+      >
+        Payments engineer
+        <span class="text-accent-light"> → </span>
+        AI platform architect
+      </p>
+
+      <p class="reveal mt-6 max-w-xl text-fluid-base text-ink-muted" style="transition-delay:180ms;">
+        Production software at the intersection of fintech precision and agentic AI —
+        from B2B payments infrastructure to multi-agent orchestration pipelines.
+      </p>
+
+      <div class="reveal mt-9 flex flex-wrap items-center gap-3" style="transition-delay:240ms;">
+        <a href={resumeHref} download class="btn btn-primary">Download résumé</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero role line in italic Alegreya, redwood-light — literary, not techy. */
+  .role {
+    font-family: var(--font-sans);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent-light);
+    line-height: 1.3;
+  }
+  /* A subtle left rule on the copy block — a title-page margin (drops on mobile). */
+  .hero-in {
+    border-left: 1px solid rgba(194, 163, 95, 0.16);
+    padding-left: clamp(18px, 2vw, 34px);
+  }
+  @media (max-width: 680px) {
+    .hero-in {
+      border-left: 0;
+      padding-left: 0;
+    }
+  }
+</style>
+
+<!-- Hero ASCII as a slow back parallax plane (flattened ≤768px + reduced-motion via CSS). -->
+<script>
+  const layer = document.getElementById('hero-ascii');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobile = window.matchMedia('(max-width: 768px)').matches;
+  if (layer && !reduce && !mobile) {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY * 0.18; // moves slower than foreground copy
+        layer.style.transform = `translate3d(0, ${y}px, 0)`;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

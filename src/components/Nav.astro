@@ -1,0 +1,96 @@
+---
+const base = import.meta.env.BASE_URL;
+const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
+const resumeHref = asset('/maung-htike-resume.pdf');
+
+const links = [
+  { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Work', href: '#work' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-line/80 bg-[rgba(10,13,20,0.72)] backdrop-blur-md">
+  <nav class="container-px flex h-[4.5rem] items-center justify-between gap-4">
+    <!-- Monogram -->
+    <a href="#top" class="group flex items-center gap-2" aria-label="Maung Htike — home">
+      <span
+        class="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface font-mono text-fluid-sm font-semibold text-accent transition group-hover:border-accent/50"
+      >
+        MH
+      </span>
+      <span class="hidden font-mono text-fluid-xs uppercase tracking-[0.2em] text-ink-muted sm:inline">
+        maung_htike
+      </span>
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden items-center gap-7 md:flex">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class="font-mono text-fluid-sm text-ink-muted transition hover:text-ink"
+          >
+            {l.label}
+          </a>
+        ))
+      }
+      <a href={resumeHref} download class="btn btn-primary !py-2 !px-4">Résumé</a>
+    </div>
+
+    <!-- Mobile controls -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href={resumeHref} download class="btn btn-primary !py-2 !px-3.5 !text-[0.8rem]">Résumé</a>
+      <button
+        type="button"
+        id="nav-toggle"
+        class="grid h-10 w-10 place-items-center rounded-lg border border-line bg-surface text-ink transition hover:border-accent/50"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu drawer -->
+  <div id="mobile-menu" class="hidden border-t border-line bg-[rgba(10,13,20,0.96)] backdrop-blur-md md:hidden">
+    <div class="container-px flex flex-col gap-1 py-3">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class="mobile-link rounded-lg px-3 py-3 font-mono text-fluid-sm text-ink-muted transition hover:bg-surface hover:text-ink"
+          >
+            {l.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    const close = () => {
+      menu.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+    };
+    toggle.addEventListener('click', () => {
+      const open = menu.classList.toggle('hidden') === false;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    menu.querySelectorAll('.mobile-link').forEach((a) => a.addEventListener('click', close));
+  }
+</script>

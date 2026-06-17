@@ -1,0 +1,136 @@
+---
+import '../styles/global.css';
+import { identity } from '../data/skills';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${identity.name} — ${identity.role}`,
+  description = `${identity.name}: full-stack engineer in fintech and agentic AI, USMC veteran. Payments infrastructure at Corpay, multi-agent AI orchestration on Claude Code.`,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+// Base-aware asset helper: join base with a leading-slash path, collapsing the seam.
+const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
+
+const ogImage = new URL(asset('/og-image.png'), Astro.site ?? 'https://sfzmango.github.io');
+const canonical = new URL(base, Astro.site ?? 'https://sfzmango.github.io');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+
+    <link rel="icon" type="image/svg+xml" href={asset('/favicon.svg')} />
+    <meta name="theme-color" content="#0d100d" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:url" content={canonical.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.href} />
+
+    <!-- Fonts: non-render-blocking preload-then-swap (one consistent strategy).
+         Each sheet is fetched as a preload, then flipped to a real stylesheet by the
+         inline script below so it never blocks first paint; <noscript> keeps it
+         working without JS. Site type: IM Fell French Canon SC (display) +
+         Alegreya (body). Jacquard 12 + VT323 are the Odyssa-scoped display faces
+         (scoped to #up-next in Odyssa.astro), loaded the same way. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      data-font-swap
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+French+Canon+SC&family=Alegreya:ital,wght@0,400..800;1,400..500&display=swap"
+    />
+    <link
+      rel="preload"
+      as="style"
+      data-font-swap
+      href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=VT323&display=swap"
+    />
+    <script is:inline>
+      // Flip each preloaded font sheet to a render-applied stylesheet without
+      // blocking first paint. Idempotent + null-safe.
+      document.querySelectorAll('link[data-font-swap]').forEach((el) => {
+        const swap = () => {
+          el.rel = 'stylesheet';
+        };
+        if (el.sheet) swap();
+        else el.addEventListener('load', swap, { once: true });
+      });
+    </script>
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IM+Fell+French+Canon+SC&family=Alegreya:ital,wght@0,400..800;1,400..500&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=VT323&display=swap"
+      />
+    </noscript>
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <slot />
+
+    <style>
+      .skip-link {
+        position: fixed;
+        top: -100%;
+        left: 1rem;
+        z-index: 100;
+        background: var(--accent);
+        color: var(--text-on-accent);
+        padding: 0.6rem 1rem;
+        border-radius: 0.5rem;
+        font-family: var(--font-label);
+        letter-spacing: 0.1em;
+        font-size: 0.9rem;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 1rem;
+      }
+    </style>
+
+    <!-- Scroll-reveal: subtle, staggered, GPU; respects reduced-motion via CSS. -->
+    <script>
+      const els = document.querySelectorAll<HTMLElement>('.reveal');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                (entry.target as HTMLElement).classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

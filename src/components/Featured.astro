@@ -1,0 +1,22 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import ProjectCard from './ProjectCard.astro';
+import { featured } from '../data/projects';
+---
+
+<section id="work" class="container-px py-section">
+  <SectionHeading
+    eyebrow="Featured work"
+    lede="A real-time multiplayer game running over websockets, and the multi-agent AI system behind a production platform rebuild."
+  />
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    {
+      featured.map((project, i) => (
+        <div class="reveal min-w-0" style={`transition-delay:${i * 80}ms;`}>
+          <ProjectCard project={project} featured />
+        </div>
+      ))
+    }
+  </div>
+</section>

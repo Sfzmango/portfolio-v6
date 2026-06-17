@@ -1,0 +1,248 @@
+---
+import StatusBadge from './StatusBadge.astro';
+import TechChip from './TechChip.astro';
+import { upNext } from '../data/projects';
+
+const base = import.meta.env.BASE_URL;
+// Base-aware asset helper (collapses the // seam).
+const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
+
+const hasDemo = upNext.demoUrl.trim() !== '';
+const repos = upNext.repos.filter((r) => r.url.trim() !== '');
+// Full-bleed hero background: the optimized ASCII-field art (defaults to the webp).
+const heroImage = asset(upNext.screenshot || '/screenshots/odyssa.webp');
+
+// A short parchment pull-quote drawn from the project's premise.
+const pullQuote =
+  'A descent into the sealed catacombs beneath a city that has known too much war.';
+
+// Split the title so the signature "y" can carry the redwood-accent flicker
+// (the teaser's wordmark touch). Falls back gracefully if "y" is absent.
+const title = upNext.title;
+const yIndex = title.indexOf('y');
+// Build the title HTML with the signature "y" wrapped in an accent span — emitted
+// as a single whitespace-free fragment so the wordmark never picks up stray gaps.
+const esc = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const titleHtml =
+  yIndex >= 0
+    ? `${esc(title.slice(0, yIndex))}<span class="odyssa-y">y</span>${esc(title.slice(yIndex + 1))}`
+    : esc(title);
+---
+
+<section id="up-next" class="odyssa-hero relative overflow-hidden">
+  <!-- Full-bleed parallax background IMAGE (scrolls slower than the centered copy). -->
+  <div
+    class="odyssa-bg parallax-layer"
+    aria-hidden="true"
+    style={`background-image: url('${heroImage}');`}
+  >
+  </div>
+  <!-- Centered scrim + soft vignette: keeps the overlaid copy legible (WCAG AA)
+       while letting the ASCII art show through. -->
+  <div class="odyssa-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
+  <!-- gilt hairline frame inset into the hero (dark-academia ornament). -->
+  <div class="odyssa-frame" aria-hidden="true"></div>
+
+  <div class="container-px relative py-[clamp(6rem,16vw,11rem)]">
+    <!-- Centered column overlaid DIRECTLY on the image (no card container). -->
+    <div class="odyssa-copy reveal mx-auto flex max-w-2xl flex-col items-center text-center">
+      <p class="eyebrow mb-3">Active Project</p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <h2 class="odyssa-title" set:html={titleHtml}></h2>
+        <StatusBadge status={upNext.status} />
+      </div>
+
+      <p class="odyssa-quote mt-6 max-w-xl">“{pullQuote}”</p>
+
+      <p class="odyssa-blurb mt-5 max-w-xl">{upNext.blurb}</p>
+      {upNext.detail && <p class="odyssa-detail mt-3 max-w-xl">{upNext.detail}</p>}
+
+      <div class="mt-6 flex flex-wrap justify-center gap-1.5">
+        {upNext.chips.map((c) => <TechChip label={c} />)}
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {
+          hasDemo && (
+            <a
+              href={upNext.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary"
+            >
+              {upNext.demoLabel ?? 'View teaser'} ↗
+            </a>
+          )
+        }
+        {
+          repos.map((r) => (
+            <a href={r.url} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              {r.label} ↗
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .odyssa-hero {
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    background: var(--bg-deep);
+    isolation: isolate;
+    /* Vertically center the copy within the band over the artwork. */
+    display: flex;
+    align-items: center;
+  }
+  .odyssa-hero > .container-px {
+    width: 100%;
+  }
+  /* The image lives in an oversized layer so a parallax shift never exposes an edge. */
+  .odyssa-bg {
+    position: absolute;
+    inset: -12% 0 -12% 0;
+    z-index: -2;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  /* Lighter centered scrim + soft vignette: the ASCII art shows through, while a
+     gentle radial darken behind the centered column holds the VT323/parchment copy
+     above WCAG AA. Worst-case (text over the brightest ASCII glyph) measures ~7:1
+     for parchment text — comfortably AA — so we keep the scrim as light as legibility
+     allows and let the art dominate. */
+  .odyssa-vignette {
+    z-index: -1;
+    background:
+      radial-gradient(
+        62% 70% at 50% 50%,
+        rgba(8, 10, 8, 0.54) 0%,
+        rgba(8, 10, 8, 0.36) 55%,
+        rgba(8, 10, 8, 0.14) 100%
+      ),
+      radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(8, 10, 8, 0.55) 100%),
+      radial-gradient(60% 90% at 8% 100%, rgba(158, 67, 50, 0.14), transparent 60%);
+  }
+  .odyssa-frame {
+    position: absolute;
+    inset: 18px;
+    z-index: -1;
+    pointer-events: none;
+    border: 1px solid rgba(194, 163, 95, 0.16);
+  }
+
+  /* === Odyssa-scoped type (Jacquard 12 + VT323) — distinct from the site system,
+     applied ONLY inside #up-next. === */
+
+  /* Title in Jacquard 12 (the woven wordmark font). */
+  .odyssa-title {
+    font-family: 'Jacquard 12', var(--font-display);
+    font-weight: 400;
+    color: var(--ink-strong);
+    font-size: clamp(2.6rem, 1.9rem + 4.4vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 22px rgba(0, 0, 0, 0.6);
+  }
+  /* Signature single-letter "y" tint in redwood + a subtle flicker.
+     :global — the "y" span is injected via set:html (no scope attr), and the
+     .odyssa-y class is unique to this component so it cannot leak. */
+  :global(.odyssa-y) {
+    color: var(--accent-light);
+    animation: odyssa-flicker 5.5s steps(1) infinite;
+  }
+  @keyframes odyssa-flicker {
+    0%,
+    18%,
+    22%,
+    100% {
+      opacity: 1;
+      text-shadow: 0 0 14px rgba(207, 131, 106, 0.5);
+    }
+    19%,
+    21% {
+      opacity: 0.62;
+      text-shadow: 0 0 4px rgba(207, 131, 106, 0.25);
+    }
+    20% {
+      opacity: 0.92;
+    }
+  }
+
+  /* Summary copy (pull-quote + blurb + detail) in VT323 (terminal/pixel). */
+  .odyssa-quote {
+    font-family: 'VT323', var(--font-sans);
+    font-style: normal;
+    font-size: clamp(1.45rem, 1.15rem + 1.3vw, 1.95rem);
+    line-height: 1.4;
+    color: var(--bone-100);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+  }
+  .odyssa-blurb,
+  .odyssa-detail {
+    font-family: 'VT323', var(--font-sans);
+    line-height: 1.45;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+  }
+  .odyssa-blurb {
+    font-size: clamp(1.25rem, 1.05rem + 0.85vw, 1.6rem);
+    color: var(--ink); /* parchment — ~7:1 worst-case over the scrimmed art */
+  }
+  .odyssa-detail {
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+    color: var(--bone-200);
+  }
+
+  /* On the centered band the chips/buttons read fine over the art; nudge the
+     copy column up slightly nowhere — keep it dead-center. */
+  @media (max-width: 768px) {
+    .odyssa-vignette {
+      /* Slightly stronger center darken on small screens (art is scaled down,
+         glyphs denser per px) — still light, still well above AA. */
+      background:
+        radial-gradient(
+          80% 80% at 50% 50%,
+          rgba(8, 10, 8, 0.58) 0%,
+          rgba(8, 10, 8, 0.4) 60%,
+          rgba(8, 10, 8, 0.2) 100%
+        ),
+        radial-gradient(60% 90% at 8% 100%, rgba(158, 67, 50, 0.12), transparent 60%);
+    }
+  }
+
+  /* Disable the "y" flicker under reduced-motion (keep the static tint). */
+  @media (prefers-reduced-motion: reduce) {
+    :global(.odyssa-y) {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Parallax: the background IMAGE moves slower than the foreground copy.
+  // Flattened ≤768px + reduced-motion (CSS kill-switch on .parallax-layer + JS guard).
+  const bg = document.querySelector<HTMLElement>('#up-next .odyssa-bg');
+  const band = document.getElementById('up-next');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobile = window.matchMedia('(max-width: 768px)').matches;
+  if (bg && band && !reduce && !mobile) {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const rect = band.getBoundingClientRect();
+        const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+        const shift = (progress - 0.5) * 90; // background drifts slower + opposite the scroll
+        bg.style.transform = `translate3d(0, ${shift}px, 0)`;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+</script>

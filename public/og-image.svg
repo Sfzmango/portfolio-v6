@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="glow" cx="88%" cy="8%" r="70%">
+      <stop offset="0%" stop-color="#C2A35F" stop-opacity="0.12"/>
+      <stop offset="60%" stop-color="#0D100D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0%" cy="100%" r="70%">
+      <stop offset="0%" stop-color="#9E4332" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#0D100D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4A4D3B"/>
+      <stop offset="100%" stop-color="#4A4D3B" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0D100D"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- gilt hairline frame inset -->
+  <rect x="28" y="28" width="1144" height="574" rx="6" fill="none" stroke="#C2A35F" stroke-opacity="0.16" stroke-width="1.5"/>
+
+  <!-- monogram -->
+  <rect x="80" y="170" width="76" height="76" rx="16" fill="#181B14" stroke="#3D4031" stroke-width="2"/>
+  <text x="118" y="210" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700"
+        fill="#C2A35F" text-anchor="middle" dominant-baseline="central">MH</text>
+
+  <text x="80" y="332" font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="700"
+        fill="#ECE1C8" letter-spacing="0">Maung Htike</text>
+
+  <text x="82" y="394" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="30" fill="#CF836A">
+    Payments engineer <tspan fill="#C2A35F" font-style="normal">&#8594;</tspan> AI platform architect</text>
+
+  <line x1="80" y1="442" x2="640" y2="442" stroke="url(#line)" stroke-width="2"/>
+  <!-- gilt diamond ornament drawn as a path (font-independent for the raster) -->
+  <rect x="80" y="426" width="11" height="11" rx="1.5" transform="rotate(45 85.5 431.5)" fill="#C2A35F" fill-opacity="0.9"/>
+
+  <text x="80" y="490" font-family="Georgia, 'Times New Roman', serif" font-size="24" fill="#9A9079" letter-spacing="0.5">
+    fintech + agentic AI &#183; USMC veteran &#183; San Bruno, CA</text>
+</svg>

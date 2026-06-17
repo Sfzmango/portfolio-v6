@@ -1,0 +1,43 @@
+---
+import { identity } from '../data/skills';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line">
+  <div class="container-px flex flex-col items-center justify-between gap-4 py-10 sm:flex-row">
+    <div class="flex items-center gap-3">
+      <span
+        class="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface font-mono text-fluid-xs font-semibold text-accent"
+      >
+        MH
+      </span>
+      <span class="font-mono text-fluid-xs text-ink-muted">
+        © {year} {identity.name}
+      </span>
+    </div>
+
+    <div class="flex items-center gap-5">
+      <a href={`mailto:${identity.email}`} class="footer-link">Email</a>
+      <a href={identity.linkedin} target="_blank" rel="noopener noreferrer" class="footer-link">
+        LinkedIn
+      </a>
+      <a href={identity.github} target="_blank" rel="noopener noreferrer" class="footer-link">
+        GitHub
+      </a>
+      <a href="#top" class="footer-link">Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-link {
+    font-family: var(--font-label);
+    letter-spacing: 0.08em;
+    font-size: clamp(0.78rem, 0.74rem + 0.2vw, 0.86rem);
+    color: var(--ink-muted);
+    transition: color 0.2s ease;
+  }
+  .footer-link:hover {
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,84 @@
+---
+import { professionalSummary, identity, education } from '../data/skills';
+
+const base = import.meta.env.BASE_URL;
+const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
+const headshot = asset('/headshot.png');
+---
+
+<section id="about" class="container-px py-section">
+  <div class="grid gap-10 lg:grid-cols-[1.6fr,1fr] lg:gap-16">
+    <div class="reveal">
+      <p class="eyebrow mb-3">About</p>
+      <h2 class="sec-rule text-fluid-2xl font-bold text-ink-strong">Engineering across payments and technology.</h2>
+
+      <div class="mt-6 flex items-center gap-4">
+        <!-- Small avatar (~96px) — native 250×250, never upscaled into a hero portrait. -->
+        <img
+          src={headshot}
+          alt={`${identity.name} headshot`}
+          width="96"
+          height="96"
+          loading="lazy"
+          decoding="async"
+          class="h-20 w-20 shrink-0 rounded-2xl border border-line object-cover shadow-glow sm:h-24 sm:w-24"
+        />
+        <div class="flex flex-col gap-2">
+          <span class="font-mono text-fluid-sm text-ink">{identity.name}</span>
+          <span class="veteran-badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L3.2 7.7l5.4-.8L12 2z" />
+            </svg>
+            U.S. Marine Corps veteran
+          </span>
+        </div>
+      </div>
+
+      <p class="mt-6 text-fluid-base leading-relaxed text-ink-muted">{professionalSummary}</p>
+      <p class="mt-4 text-fluid-base leading-relaxed text-ink-muted">
+        A U.S. Marine Corps veteran based in {identity.location}. The same discipline
+        carries into shipping reliable software: rigorous review, measurable quality
+        gates, and a focus on finishing work end-to-end.
+      </p>
+    </div>
+
+    <aside class="reveal" style="transition-delay:120ms;">
+      <div class="card p-6">
+        <p class="eyebrow mb-4">Education & certs</p>
+        <ul class="flex flex-col gap-4">
+          {
+            education.map((e) => (
+              <li class="flex flex-col gap-0.5 border-l border-line pl-4">
+                <span class="text-fluid-sm font-medium text-ink">{e.title}</span>
+                <span class="font-mono text-fluid-xs text-ink-muted">
+                  {e.org} · {e.year}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  /* Veteran badge — gilt service-ribbon tone. */
+  .veteran-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    width: fit-content;
+    font-family: var(--font-label);
+    font-size: clamp(0.74rem, 0.7rem + 0.16vw, 0.84rem);
+    letter-spacing: 0.08em;
+    padding: 0.32em 0.7em;
+    border-radius: 0.55rem;
+    border: 1px solid rgba(194, 163, 95, 0.34);
+    background: rgba(194, 163, 95, 0.1);
+    color: var(--gilt-light);
+  }
+  .veteran-badge svg {
+    color: var(--gilt);
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import type { ProjectStatus } from '../data/projects';
+
+export interface Props {
+  status: ProjectStatus;
+}
+const { status } = Astro.props;
+
+// TRUE status chips (engraved small-caps) — tied to real deploy state.
+// LIVE = moss; DEV / SOON = gilt. No decorative 01/02/03.
+const map: Record<ProjectStatus, { label: string; glyph: string; cls: string }> = {
+  live: { label: 'LIVE', glyph: '●', cls: 'status-live' },
+  'in-dev': { label: 'IN DEV', glyph: '◐', cls: 'status-dev' },
+  'coming-soon': { label: 'COMING SOON', glyph: '○', cls: 'status-soon' },
+};
+
+const { label, glyph, cls } = map[status];
+---
+
+<span class={`status ${cls}`}>
+  <span class="status-glyph" aria-hidden="true">{glyph}</span>
+  {label}
+</span>
+
+<style>
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-family: var(--font-label);
+    font-size: clamp(0.72rem, 0.66rem + 0.16vw, 0.82rem);
+    letter-spacing: 0.12em;
+    text-transform: none;
+    padding: 0.3em 0.62em;
+    border-radius: 0.55rem;
+    border: 1px solid var(--hairline);
+    background: rgba(236, 225, 200, 0.03);
+    white-space: nowrap;
+  }
+  .status-glyph {
+    font-size: 0.85em;
+    line-height: 1;
+  }
+  /* LIVE = moss */
+  .status-live {
+    color: var(--success);
+    border-color: rgba(125, 147, 79, 0.45);
+  }
+  .status-live .status-glyph {
+    color: var(--success);
+    text-shadow: 0 0 8px rgba(125, 147, 79, 0.4);
+  }
+  /* IN DEV = gilt */
+  .status-dev {
+    color: var(--gilt-light);
+    border-color: rgba(194, 163, 95, 0.4);
+  }
+  .status-dev .status-glyph {
+    color: var(--gilt);
+  }
+  /* COMING SOON = gilt (muted) */
+  .status-soon {
+    color: var(--gilt);
+    border-color: rgba(194, 163, 95, 0.32);
+  }
+  .status-soon .status-glyph {
+    color: var(--gilt-deep);
+  }
+</style>

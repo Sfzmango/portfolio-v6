@@ -32,11 +32,17 @@ pnpm-debug.log*
 .vscode/
 .idea/
 
+# local scratch — agent screenshots + one-off verification scripts, never published
+tmp/
+
 # internal build scaffolding — intentionally NOT published to this public repo
 HANDOFF_PORTFOLIO_V6.md
 ASSETS_NEEDED.md
 incoming/
 reference/
+
+# borrowed ASCII-field reference file must never re-enter the publish tree
+public/scripts/
 
 # local planning notes — kept on disk to guide the build, never published
 docs/plans/

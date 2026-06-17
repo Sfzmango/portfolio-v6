@@ -1,0 +1,17 @@
+---
+export interface Props {
+  eyebrow: string;
+  title: string;
+  /** Optional supporting line under the heading. */
+  lede?: string;
+  id?: string;
+}
+
+const { eyebrow, title, lede, id } = Astro.props;
+---
+
+<div class="reveal mb-10 max-w-2xl sm:mb-14" id={id}>
+  <p class="eyebrow mb-3">{eyebrow}</p>
+  <h2 class="sec-rule text-fluid-2xl font-bold text-ink-strong">{title}</h2>
+  {lede && <p class="mt-7 text-fluid-base text-ink-muted">{lede}</p>}
+</div>

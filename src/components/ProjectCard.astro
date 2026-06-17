@@ -1,0 +1,135 @@
+---
+import type { Project } from '../data/projects';
+import TechChip from './TechChip.astro';
+import StatusBadge from './StatusBadge.astro';
+
+export interface Props {
+  project: Project;
+  /** Featured cards render larger with split chip groups + detail copy. */
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
+
+// LINK GUARD: anchor renders ONLY when the URL is a non-empty string.
+const hasDemo = typeof project.demoUrl === 'string' && project.demoUrl.trim() !== '';
+const repos = project.repos.filter((r) => typeof r.url === 'string' && r.url.trim() !== '');
+const hasScreenshot = typeof project.screenshot === 'string' && project.screenshot.trim() !== '';
+const isComingSoon = project.status === 'coming-soon';
+// A vector mark (the AI-Orchestration Claude spark) is shown CONTAINED + centered
+// on the card's forest-night surface; raster screenshots fill the frame (cover).
+const isVectorMark = hasScreenshot && project.screenshot.trim().toLowerCase().endsWith('.svg');
+---
+
+<article class={`card card-hover flex h-full min-w-0 flex-col overflow-hidden ${featured ? 'p-0' : 'p-0'}`}>
+  {
+    hasScreenshot ? (
+      <div class="aspect-[16/9] w-full overflow-hidden border-b border-line bg-[var(--bg)]">
+        <img
+          src={asset(project.screenshot)}
+          alt={project.screenshotAlt ?? `${project.title} screenshot`}
+          loading="lazy"
+          decoding="async"
+          width="800"
+          height="450"
+          class={
+            isVectorMark
+              ? 'h-full w-full object-contain p-6 transition duration-500 hover:scale-[1.04]'
+              : 'h-full w-full object-cover object-top opacity-95 transition duration-500 hover:scale-[1.03]'
+          }
+        />
+      </div>
+    ) : (
+      <div
+        class="flex aspect-[16/9] w-full items-center justify-center border-b border-line"
+        style="background: radial-gradient(60% 80% at 50% 0%, rgba(194,163,95,0.07), transparent 70%), var(--inset);"
+      >
+        <span class="font-mono text-fluid-xs uppercase tracking-[0.2em] text-ink-muted">
+          {isComingSoon ? 'preview coming soon' : 'screenshot pending'}
+        </span>
+      </div>
+    )
+  }
+
+  <div class={`flex flex-1 flex-col gap-4 ${featured ? 'p-6 sm:p-8' : 'p-5 sm:p-6'}`}>
+    <div class="flex items-start justify-between gap-3">
+      <div class="flex flex-col gap-0.5">
+        <h3 class={`font-bold text-ink ${featured ? 'text-fluid-xl' : 'text-fluid-lg'}`}>
+          {project.title}
+        </h3>
+        {project.subtitle && (
+          <span class="font-mono text-fluid-xs uppercase tracking-wider text-accent/80">
+            {project.subtitle}
+          </span>
+        )}
+      </div>
+      <StatusBadge status={project.status} />
+    </div>
+
+    <p class="text-fluid-sm text-ink-muted">{project.blurb}</p>
+    {featured && project.detail && (
+      <p class="text-fluid-sm leading-relaxed text-ink-muted/90">{project.detail}</p>
+    )}
+
+    <!-- Tech chips: native mono pills. Featured cards split into front/back groups. -->
+    {
+      project.chipGroups ? (
+        <div class="flex flex-col gap-3">
+          {project.chipGroups.map((g) => (
+            <div class="flex flex-col gap-2">
+              <span class="font-mono text-fluid-xs uppercase tracking-wider text-accent/80">
+                {g.label}
+              </span>
+              <div class="flex flex-wrap gap-1.5">
+                {g.chips.map((c) => (
+                  <TechChip label={c} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="flex flex-wrap gap-1.5">
+          {project.chips.map((c) => (
+            <TechChip label={c} />
+          ))}
+        </div>
+      )
+    }
+
+    <!-- Action buttons — link guard enforced; no dead hrefs. -->
+    <div class="mt-auto flex flex-wrap items-center gap-2.5 pt-2">
+      {
+        hasDemo ? (
+          <a
+            href={project.demoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-primary"
+          >
+            {project.demoLabel ?? 'Live demo'} ↗
+          </a>
+        ) : isComingSoon || repos.length > 0 ? null : (
+          <span class="btn btn-ghost cursor-default opacity-70" aria-disabled="true">
+            Demo coming
+          </span>
+        )
+      }
+      {
+        repos.map((r) => (
+          <a href={r.url} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+            {r.label} ↗
+          </a>
+        ))
+      }
+      {
+        isComingSoon && repos.length === 0 && (
+          <span class="font-mono text-fluid-xs text-ink-muted">Link wired at launch.</span>
+        )
+      }
+    </div>
+  </div>
+</article>

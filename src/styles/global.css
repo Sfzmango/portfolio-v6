@@ -1,0 +1,412 @@
+/* ============================================================
+   "Woodland Academia" — global tokens + base typography
+   A true dark-academia system: classical engraved small-caps display
+   (IM Fell French Canon SC) + literary serif body (Alegreya). Parchment
+   text on a cool, muted forest-night base, REDWOOD/MAROON as the single
+   accent and AGED GILT as the secondary. Replaces the former grotesk +
+   monospace "Signal Gold on Cool Ink" system entirely — NO monospace anymore.
+   ============================================================ */
+
+/* Fonts are loaded via a non-render-blocking preload-then-swap <link> in
+   Layout.astro (IM Fell French Canon SC + Alegreya, alongside the
+   Odyssa-scoped Jacquard 12 + VT323). No @import here — an @import is
+   hoisted to the top of the bundled CSS and render-blocks the whole sheet. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ---- Ink scale: cool, muted forest-night charcoal -> parchment ----
+     Exact hex ported from ui_kits/portfolio-woodland/theme.css */
+  --ink-950: #080a08;
+  --ink-900: #0d100d;
+  /* page */
+  --ink-850: #13160f;
+  /* band */
+  --ink-800: #181b14;
+  /* card */
+  --ink-750: #1f2218;
+  /* card hover */
+  --ink-700: #20231a;
+  /* inset */
+  --ink-600: #333629;
+  /* hairline strong */
+  --ink-550: #3d4031;
+  /* card border */
+  --ink-500: #4a4d3b;
+  /* divider */
+  --ink-400: #6b6c55;
+  /* faint */
+  --ink-300: #9a9079;
+  /* muted (sepia) */
+  --ink-200: #c0b698;
+  /* secondary parchment */
+  --ink-100: #d6c9af;
+  /* near-white parchment */
+
+  /* ---- Bone / parchment ---- */
+  --bone-100: #ece1c8;
+  --bone-200: #ddd0b2;
+  --bone-300: #c4b794;
+
+  /* ---- Accent: redwood / oxblood maroon ---- */
+  --accent-light: #cf836a;
+  --accent-bright: #b85c43;
+  /* hover */
+  --accent: #9e4332;
+  /* primary accent — redwood */
+  --accent-press: #7c2c22;
+  /* maroon press */
+  --accent-deep: #5f231d;
+  --accent-rgb: 158, 67, 50;
+
+  /* ---- Secondary: aged gilt ---- */
+  --gilt-light: #d8c07e;
+  --gilt: #c2a35f;
+  --gilt-deep: #9a7d42;
+  --gilt-rgb: 194, 163, 95;
+
+  /* ---- Semantic, earthy ---- */
+  --success: #7d934f;
+  /* moss — LIVE */
+  --warning: #c2a35f;
+  /* gilt — DEV / SOON */
+  --danger: #b8493a;
+  /* clay */
+
+  /* ---- Surface aliases (cascade everywhere the old names were used) ---- */
+  --bg: #0d100d;
+  --bg-deep: #080a08;
+  --band: #13160f;
+  --surface: #181b14;
+  --surface-hover: #1f2218;
+  --inset: #20231a;
+  --line: #3d4031;
+  /* card border */
+  --hairline: #333629;
+  --divider: #4a4d3b;
+  --ink-muted: #9a9079;
+  /* muted sepia */
+  --ink: #d6c9af;
+  /* parchment body text (WCAG AA on #0d100d) */
+  --ink-strong: #ece1c8;
+  /* bone */
+  --glow: rgba(194, 163, 95, 0.12);
+  /* gilt ambient */
+  --text-on-accent: #f6eeda;
+  /* parchment on redwood fill */
+
+  /* ---- Type: classical small-caps display + literary serif body ----
+     IM Fell French Canon SC for display/hero name/wordmark/eyebrows/chips/
+     badges/labels/dates; Alegreya for body + section/card titles. */
+  --font-display: 'IM Fell French Canon SC', 'Alegreya', Georgia, serif;
+  --font-sans: 'Alegreya', Georgia, 'Times New Roman', serif;
+  --font-label: 'IM Fell French Canon SC', 'Alegreya', Georgia, serif;
+  --tracking-label: 0.12em;
+
+  /* ---- ASCII-field contract (LOCKED NAMES — island reads exactly these) ----
+     The island reads ONLY var(--ascii-ink) + var(--accent) + var(--gilt),
+     each with a hardcoded fallback. These names must never drift from here
+     and the mirror in tailwind.config.mjs. The starfield is colored from
+     parchment ink with gilt accent flecks on the forest-night base. */
+  --ascii-ink: rgba(214, 201, 175, 0.42);
+  /* parchment the field is drawn in */
+  /* --accent (redwood) + --gilt (aged gilt) shared verbatim with the system. */
+
+  --radius-card: 1.25rem;
+  --radius-card-lg: 1.75rem;
+
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  /* sticky nav offset for anchor jumps */
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 0.94rem + 0.34vw, 1.15rem);
+  line-height: 1.74;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  overflow-x: hidden;
+  /* belt-and-suspenders against horizontal overflow */
+}
+
+/* Warm dusk ambient: redwood glow at lower-left + gilt glow at upper-right. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(52rem 44rem at 88% -8%, rgba(194, 163, 95, 0.07), transparent 60%),
+    radial-gradient(58rem 50rem at -8% 112%, rgba(158, 67, 50, 0.10), transparent 58%);
+}
+
+/* Aged-stone / parchment grain over the whole page (~7% opacity, screen blend).
+   Procedural SVG feTurbulence — no external asset. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.86  0 0 0 0 0.79  0 0 0 0 0.62  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+::selection {
+  background: rgba(194, 163, 95, 0.3);
+  color: var(--ink-strong);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gilt);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Section + card titles in Alegreya (sentence case, literary serif). */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sans);
+  line-height: 1.12;
+  letter-spacing: 0;
+  font-weight: 700;
+  color: var(--ink-strong);
+  text-wrap: balance;
+}
+
+/* ---- Reusable component classes ---- */
+@layer components {
+  .container-px {
+    width: var(--max-w, min(92vw, 72rem));
+    margin-inline: auto;
+  }
+
+  /* Eyebrows: engraved classical small-caps caption (IM Fell). */
+  .eyebrow {
+    font-family: var(--font-label);
+    font-size: clamp(0.82rem, 0.76rem + 0.2vw, 0.94rem);
+    letter-spacing: var(--tracking-label);
+    text-transform: none;
+    /* IM Fell SC renders small-caps natively */
+    color: var(--gilt);
+  }
+
+  /* ❖ gilt diamond prefix on eyebrows — the dark-academia signature. */
+  .eyebrow::before {
+    content: '\2756\00a0';
+    color: var(--gilt);
+    opacity: 0.9;
+  }
+
+  .card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(236, 225, 200, 0.02), transparent),
+      var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: 0 8px 30px -12px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(236, 225, 200, 0.05);
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, rgba(236, 225, 200, 0.025), transparent),
+      var(--surface-hover);
+    border-color: rgba(194, 163, 95, 0.34);
+    box-shadow: 0 14px 44px -14px rgba(0, 0, 0, 0.7),
+      0 0 56px -22px var(--glow), inset 0 1px 0 rgba(236, 225, 200, 0.06);
+  }
+
+  /* Chips: engraved small-caps pills (IM Fell). Wrap long labels so a single
+     long chip can never force horizontal page overflow at narrow widths. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    max-width: 100%;
+    font-family: var(--font-label);
+    font-size: clamp(0.78rem, 0.72rem + 0.18vw, 0.9rem);
+    letter-spacing: 0.08em;
+    line-height: 1.15;
+    padding: 0.42em 0.72em;
+    border-radius: 0.55rem;
+    border: 1px solid var(--hairline);
+    background: rgba(236, 225, 200, 0.03);
+    color: var(--ink-muted);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .chip:hover {
+    color: var(--ink-strong);
+    border-color: rgba(194, 163, 95, 0.36);
+    background: rgba(236, 225, 200, 0.05);
+  }
+
+  /* Buttons: small-caps classical captions (IM Fell), tracked. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-family: var(--font-label);
+    font-size: clamp(0.92rem, 0.86rem + 0.2vw, 1.02rem);
+    letter-spacing: 0.1em;
+    padding: 0.62em 1.2em;
+    border-radius: 0.65rem;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.22s ease,
+      border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--text-on-accent);
+    border-color: var(--accent);
+    font-weight: 400;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-bright);
+    border-color: var(--accent-bright);
+    box-shadow: 0 0 28px -8px rgba(var(--accent-rgb), 0.45);
+  }
+
+  .btn-primary:active {
+    background: var(--accent-press);
+    border-color: var(--accent-press);
+  }
+
+  .btn-ghost {
+    background: rgba(236, 225, 200, 0.03);
+    color: var(--ink);
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(194, 163, 95, 0.45);
+    color: var(--ink-strong);
+  }
+
+  .btn-secondary {
+    background: rgba(194, 163, 95, 0.08);
+    color: var(--gilt-light);
+    border-color: rgba(194, 163, 95, 0.4);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gilt);
+    color: var(--ink-strong);
+    box-shadow: 0 0 26px -10px var(--glow);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ❖ gilt-diamond + thin gilt rule beneath each section heading. */
+  .sec-rule {
+    position: relative;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--hairline);
+    box-shadow: 0 1px 0 0 rgba(194, 163, 95, 0.18);
+  }
+
+  .sec-rule::after {
+    content: '\2756';
+    position: absolute;
+    left: 0;
+    bottom: -0.72em;
+    font-size: 0.78rem;
+    color: var(--gilt);
+    background: var(--bg);
+    padding-right: 0.65rem;
+  }
+}
+
+/* ---- Scroll-reveal (subtle fade + 8–12px rise, staggered) ---- */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ---- Parallax (GPU transforms only) ---- */
+.parallax-layer {
+  will-change: transform;
+}
+
+/* HARD: flatten/disable parallax ≤768px AND under prefers-reduced-motion. */
+@media (max-width: 768px) {
+  .parallax-layer {
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .parallax-layer {
+    transform: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
