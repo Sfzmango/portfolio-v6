@@ -124,14 +124,14 @@ export const featured: Project[] = [
 export const selectedWork: Project[] = [
   {
     id: 'mhrk-wedding',
-    title: 'MHRK Wedding',
+    title: 'Maung & Rose Wedding',
     blurb:
       'A wedding website with a vintage visual design — RSVP form, the couple’s story, and curated local recommendations. Feel free to RSVP but the event is long over though...',
     status: 'live',
     chips: ['Next.js 14', 'React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Headless UI'],
     demoUrl: 'https://kilgorewedding.online',
     demoLabel: 'Live demo',
-    repos: [{ label: 'Repo', url: 'https://github.com/Sfzmango/mhrkwedding' }],
+    repos: [],
     screenshot: '/screenshots/wedding.jpg',
     screenshotAlt: 'MHRK Wedding website home page',
   },
