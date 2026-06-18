@@ -98,7 +98,7 @@ export const identity: SiteIdentity = {
 };
 
 export const professionalSummary =
-  'Full-stack software engineer with nearly a decade of technical experience across fintech SaaS and AI-platform engineering. Built B2B payments infrastructure at Corpay (NYSE: CPAY), then designed a multi-agent AI orchestration system on Claude Code — adversarial evaluation loops, MCP tool integrations, zero-regression quality gates — to ship a production multi-tenant procure-to-pay platform end-to-end.';
+  'Full-stack software engineer with nearly a decade of technical experience across fintech SaaS and technology. Built B2B payments infrastructure at Corpay (NYSE: CPAY), then designed a multi-agent AI orchestration system on Claude Code — adversarial evaluation loops, MCP tool integrations, zero-regression quality gates — to ship a production multi-tenant procure-to-pay platform end-to-end.';
 
 export interface Education {
   title: string;

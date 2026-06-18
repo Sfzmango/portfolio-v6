@@ -13,8 +13,7 @@ const repos = upNext.repos.filter((r) => r.url.trim() !== '');
 const heroImage = asset(upNext.screenshot || '/screenshots/odyssa.webp');
 
 // A short parchment pull-quote drawn from the project's premise.
-const pullQuote =
-  'A descent into the sealed catacombs beneath a city that has known too much war.';
+
 
 // Split the title so the signature "y" can carry the redwood-accent flicker
 // (the teaser's wordmark touch). Falls back gracefully if "y" is absent.
@@ -53,8 +52,6 @@ const titleHtml =
         <h2 class="odyssa-title" set:html={titleHtml}></h2>
         <StatusBadge status={upNext.status} />
       </div>
-
-      <p class="odyssa-quote mt-6 max-w-xl">“{pullQuote}”</p>
 
       <p class="odyssa-blurb mt-5 max-w-xl">{upNext.blurb}</p>
       {upNext.detail && <p class="odyssa-detail mt-3 max-w-xl">{upNext.detail}</p>}
