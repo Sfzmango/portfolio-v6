@@ -4,6 +4,7 @@ import { professionalSummary, identity, education } from '../data/skills';
 const base = import.meta.env.BASE_URL;
 const asset = (p: string) => `${base}${p}`.replace(/([^:])\/\/+/g, '$1/');
 const headshot = asset('/headshot.png');
+const ega = asset('/usmc-ega.svg');
 ---
 
 <section id="about" class="container-px py-section">
@@ -26,28 +27,24 @@ const headshot = asset('/headshot.png');
         <div class="flex flex-col gap-2">
           <span class="font-mono text-fluid-sm text-ink">{identity.name}</span>
           <span class="veteran-badge">
-            <!-- Fouled anchor — a recognizable U.S. Marine Corps / naval emblem motif.
-                 The full Eagle, Globe & Anchor turns into an illegible blob at this
-                 inline size, so a clean rope-wrapped anchor reads better and stays
-                 respectful. Monochrome via currentColor so the gilt tint applies. -->
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+            <!-- Eagle, Globe & Anchor — the detailed U.S. Marine Corps emblem, served
+                 as a static asset (public/usmc-ega.svg) whose every shape is pre-baked
+                 to the gilt service-ribbon tone (#c2a35f === var(--gilt)). Rendered as
+                 an <img> (not a CSS mask): a flat mask collapses the line-art into a
+                 solid blob, whereas the real shapes keep the dark page showing between
+                 the gilt feathers/globe-grid/rope so the emblem stays legible. Sized
+                 30px tall (native 400×440 → ~27.3px wide) — the smallest size where the
+                 eagle, gridded globe and fouled anchor all still read. URL is base-aware
+                 via the asset() helper for the /portfolio-v6 subpath. -->
+            <img
+              src={ega}
+              width="27.3"
+              height="30"
+              alt=""
               aria-hidden="true"
-            >
-              <circle cx="12" cy="3.6" r="1.7" />
-              <path d="M12 5.3v13.9" />
-              <path d="M8.6 8.4h6.8" />
-              <path d="M5 13c0 3.8 3.1 6 7 6s7-2.2 7-6" />
-              <path d="M5 13l-2 .6 1.1-2.4M19 13l2 .6-1.1-2.4" />
-              <path d="M12 5.9c1.9.3 3.1 1.2 3.1 2.4 0 1.1-1 1.8-2.4 2.1-1.3.3-2.4 1-2.4 2.1 0 1.2 1.2 2.1 3.1 2.4" />
-            </svg>
+              loading="lazy"
+              decoding="async"
+            />
             U.S. Marine Corps veteran
           </span>
         </div>
@@ -88,6 +85,9 @@ const headshot = asset('/headshot.png');
     align-items: center;
     gap: 0.4em;
     width: fit-content;
+    /* Keep the pill compact around the taller EGA emblem: the line-box no longer
+       drives the height, so the padding alone sets the vertical rhythm. */
+    line-height: 1;
     font-family: var(--font-label);
     font-size: clamp(0.74rem, 0.7rem + 0.16vw, 0.84rem);
     letter-spacing: 0.08em;
@@ -97,7 +97,14 @@ const headshot = asset('/headshot.png');
     background: rgba(194, 163, 95, 0.1);
     color: var(--gilt-light);
   }
-  .veteran-badge svg {
-    color: var(--gilt);
+  .veteran-badge img {
+    /* `block` drops the inline descender gap so the emblem centres cleanly
+       against the text; `flex-shrink` guard keeps it crisp if the pill is tight.
+       Explicit width/height attrs reserve the box up front (no layout shift on
+       load); the gilt colour is pre-baked into the SVG, so no tint rule is needed. */
+    display: block;
+    flex-shrink: 0;
+    height: 30px;
+    width: auto;
   }
 </style>

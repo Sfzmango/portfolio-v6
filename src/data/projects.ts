@@ -5,7 +5,7 @@
 // or a non-link "demo coming" state — never a dead/empty href. Applies to every
 // record so no project can ship href="".
 
-export type ProjectStatus = 'live' | 'in-dev' | 'coming-soon';
+export type ProjectStatus = 'live' | 'in-dev' | 'coming-soon' | 'beta';
 
 export interface ProjectLink {
   label: string;
@@ -45,9 +45,9 @@ export const featured: Project[] = [
     id: 'tafl',
     title: 'TAFL',
     blurb:
-      'Web implementation of the Norse strategy game Tafl (hnefatafl).',
+      'A web implementation of the ancient Norse strategy game Tafl (hnefatafl) — two-player couch play on a single shared device.',
     detail:
-      'A full-stack board game: an authoritative Rails 7 backend over Action Cable / WebSockets drives synchronized, multiplayer hnefatafl matches against a React 19 + Zustand client deployed on AWS Amplify.',
+      'A full-stack hnefatafl game for local two-player couch play — two people share one device and alternate turns on the same board. A React 19 + TypeScript client (Zustand for game state) calls a Rails 7 JSON API that validates moves and stores games in PostgreSQL.',
     status: 'live',
     chips: [],
     chipGroups: [
@@ -58,9 +58,7 @@ export const featured: Project[] = [
           'Vite',
           'TypeScript',
           'Zustand',
-          'Socket.IO',
-          'AWS Amplify',
-          'styled-components',
+          'Emotion',
         ],
       },
       {
@@ -68,9 +66,6 @@ export const featured: Project[] = [
         chips: [
           'Rails 7.1',
           'PostgreSQL',
-          'Action Cable',
-          'Redis',
-          'Hotwire',
           'Puma',
           'rack-cors',
         ],
@@ -92,11 +87,11 @@ export const featured: Project[] = [
     // Public open-source repo alias (shown as a card subtitle).
     subtitle: "Maung's Agentic Toolbelt",
     blurb:
-      'A multi-step, multi-agent Claude Code pipeline that builds production software end-to-end — strict planner/implementer separation, adversarial review loops, and zero-regression eval gates.',
+      'A project-agnostic, human-gated Claude Code toolbelt — 16 agents and 9 skills that carry work from a raw idea to a security-reviewed, merge-ready pull request, and keep a codebase\'s docs current on their own.',
     detail:
-      'A project-agnostic, human-gated multi-agent system: planning, implementation, review, and resolution routed across dedicated agents, with zero-context "fresh-eyes" reviewers, rubric-scored verdicts, MCP integrations for GitHub and Playwright, and CI-enforced quality gates. Applied end-to-end to a multi-tenant procure-to-pay platform rebuild.',
+      'A standalone, open-source release: dedicated agents and skills for planning, implementation, review, security review, bug diagnosis, chores, handoffs, and a self-maintaining wiki — with zero-context "fresh-eyes" reviewers, rubric-scored verdicts, always-on guardrail hooks, and MCP integrations for GitHub and Playwright. It auto-detects each host project\'s conventions and installs as a Claude Code plugin, generalizing the workflow used to deliver a multi-tenant procure-to-pay platform end-to-end.',
     // Public, in-development open-source repo (verified public 2026-06-17).
-    status: 'in-dev',
+    status: 'beta',
     chips: [
       'Claude Code',
       'MCP',
@@ -126,7 +121,7 @@ export const selectedWork: Project[] = [
     id: 'mhrk-wedding',
     title: 'Maung & Rose Wedding',
     blurb:
-      'A wedding website with a vintage visual design — RSVP form, the couple’s story, and curated local recommendations. Feel free to RSVP but the event is long over though...',
+      'A wedding website with a vintage visual design with all of the components to ensure that guests will be able to RSVP and also have all the information they need for the event. Feel free to RSVP but the event is long over though...',
     status: 'live',
     chips: ['Next.js 14', 'React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Headless UI'],
     demoUrl: 'https://kilgorewedding.online',

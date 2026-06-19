@@ -17,8 +17,8 @@ export const experience: ExperienceEntry[] = [
     location: 'Remote',
     dateRange: 'May 2026 — Present',
     bullets: [
-      'Architected a multi-tenant procure-to-pay platform rebuild, delivered end-to-end through a purpose-built multi-agent AI workflow.',
-      'Designed a multi-agent orchestration system on Claude Code, released as the open-source "Maung\'s Agentic Toolbelt": a project-agnostic, human-gated pipeline routing planning, implementation, review, and resolution across dedicated agents, with strict planner/implementer separation and MCP integrations for GitHub and Playwright.',
+      'Architected a multi-tenant procure-to-pay platform rebuild, delivered end-to-end through a multi-agent AI workflow tailored to the company\'s repositories.',
+      'Released a project-agnostic, standalone version of that workflow as the open-source "Maung\'s Agentic Toolbelt" — 16 agents and 9 skills that take work from a raw idea to a security-reviewed, merge-ready pull request, the general-purpose counterpart to the company-tailored configuration — routing planning, implementation, review, and resolution across dedicated agents with strict planner/implementer separation and MCP integrations for GitHub and Playwright.',
       'Engineered adversarial evaluation loops for LLM-generated plans and code — zero-context reviewer agents, rubric-scored verdicts, and a bounded diagnose-vs-refute debate that blocks unconfirmed bug diagnoses.',
       'Enforced zero-regression quality gates on AI-generated code: RuboCop, Vite, and a 790+-example RSpec suite in pre-commit hooks and CI; authored 10 Playwright browser-automation playbooks.',
       'Shipped to production: 23 CI-gated PRs and 50+ commits in the first 3 weeks — a 22-model Rails 8 domain (vendors, purchase orders, default-deny RBAC) with a ~2:1 spec-to-code ratio.',

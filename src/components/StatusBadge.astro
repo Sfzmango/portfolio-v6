@@ -12,6 +12,7 @@ const map: Record<ProjectStatus, { label: string; glyph: string; cls: string }> 
   live: { label: 'LIVE', glyph: '●', cls: 'status-live' },
   'in-dev': { label: 'IN DEV', glyph: '◐', cls: 'status-dev' },
   'coming-soon': { label: 'COMING SOON', glyph: '○', cls: 'status-soon' },
+  beta: { label: 'BETA', glyph: '◆', cls: 'status-beta' },
 };
 
 const { label, glyph, cls } = map[status];
@@ -65,5 +66,13 @@ const { label, glyph, cls } = map[status];
   }
   .status-soon .status-glyph {
     color: var(--gilt-deep);
+  }
+  /* BETA = redwood (released, still evolving) */
+  .status-beta {
+    color: var(--accent-light);
+    border-color: rgba(207, 131, 106, 0.42);
+  }
+  .status-beta .status-glyph {
+    color: var(--accent);
   }
 </style>
