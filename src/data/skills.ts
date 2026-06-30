@@ -98,7 +98,7 @@ export const identity: SiteIdentity = {
 };
 
 export const professionalSummary =
-  'Software engineer with nearly a decade of hands-on experience spanning hardware and software — from electro-optical systems and reliability testing into full-stack and backend engineering. Spent ~3 years shipping production Ruby on Rails on Corpay\'s (NYSE: CPAY) B2B payments platform moving millions of dollars daily; now architect and a founding engineer building a multi-tenant procure-to-pay platform end-to-end through a self-designed multi-agent AI workflow on Claude Code.';
+  'Software engineer with nearly a decade of hands-on experience spanning hardware and software — from electro-optical systems and reliability testing into full-stack and backend engineering. Spent ~3 years shipping production Ruby on Rails on Corpay\'s (NYSE: CPAY) B2B payments platform moving millions of dollars daily; now an architect and a founding engineer building a multi-tenant procure-to-pay platform end-to-end through a self-designed multi-agent AI workflow on Claude Code.';
 
 export interface Education {
   title: string;

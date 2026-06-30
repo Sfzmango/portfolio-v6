@@ -121,7 +121,7 @@ export const selectedWork: Project[] = [
     id: 'mhrk-wedding',
     title: 'Maung & Rose Wedding',
     blurb:
-      'A wedding website with a vintage visual design with all of the components to ensure that guests will be able to RSVP and also have all the information they need for the event. Feel free to RSVP but the event is long over though...',
+      'A wedding website with a vintage visual design and all of the components to ensure that guests will be able to RSVP and also have all the information they need for the event. Feel free to RSVP but the event is long over though...',
     status: 'live',
     chips: ['Next.js 14', 'React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Headless UI'],
     demoUrl: 'https://kilgorewedding.online',
