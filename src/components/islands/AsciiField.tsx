@@ -2,9 +2,14 @@ import { useEffect, useRef } from 'react';
 
 /* ============================================================
    ASCII STARFIELD — canvas perspective fly-through (Woodland Academia)
-   A faint, atmospheric BACK layer of monospace glyphs projected from a
-   vanishing point and accelerated outward, like flying through a star
-   field. Each glyph's rendered SIZE + brightness tracks its depth/z in
+   A faint, atmospheric BACK layer of Burmese (Myanmar-script) glyphs projected
+   from a vanishing point and accelerated outward, like flying through a star
+   field. Each glyph additionally rides its OWN small path variation — a per-star
+   angular drift (curves its heading), a depth-scaled perpendicular wobble (weaves
+   it in x/y, growing as it nears so it reads as 3D parallax), and a per-star
+   approach speed (z-rate) — so characters travel individual trajectories instead
+   of all sharing one dead-straight radial line, while still flying TOWARD the
+   viewer. Each glyph's rendered SIZE + brightness tracks its depth/z in
    the fly-through (nearer = larger + brighter, farther = smaller + dimmer)
    with per-star randomness so it never reads as uniform rings. Stars are
    tinted along a WARM REDDISH GRADIENT — parchment ink blended toward the
@@ -50,8 +55,24 @@ import { useEffect, useRef } from 'react';
    palette, blended against the parchment --ascii-ink.
    ============================================================ */
 
-// far/faint → near/bright. Drawn per-glyph; near stars also scale UP in px.
-const RAMP = '.·:-=+*#@';
+// Burmese (Myanmar-script) standalone glyphs — consonants, independent vowels,
+// and digits — chosen because each renders as ONE complete, round glyph on its
+// own. Combining medials / vowel-signs / virama are deliberately excluded: drawn
+// in isolation they'd render as dotted-circle tofu. Each star picks an index into
+// this set and occasionally switches (see render), so the field shimmers between
+// characters. Drawn in Noto Sans Myanmar (declared in Layout.astro); the font is
+// awaited via document.fonts before the first paint so the canvas never flashes
+// fallback boxes. Unlike the old brightness RAMP, glyph choice is now random —
+// depth/brightness is carried purely by size + alpha, not by glyph density.
+const GLYPHS = Array.from(
+  'ကခဂဃငစဆဇဈညတထဒနပဖဗမယရလဝသဟဠအဣဤဥဦဧဩ၀၁၂၃၄၅၆၇၈၉',
+);
+// Font stack for the canvas. Falls back to OS Burmese faces (macOS / Linux) so
+// the glyphs still render natively in the brief window before the webfont loads.
+const FONT_STACK = '"Noto Sans Myanmar", "Myanmar MN", "Padauk", sans-serif';
+// Per-frame probability that a live star flips to a different Burmese character —
+// low enough to read as a gentle cycle (~1 switch/sec/star) rather than noise.
+const SWITCH_P = 0.03;
 
 export interface AsciiFieldProps {
   /** Reference glyph size in px (depth scales each star around this). ~3x the
@@ -71,8 +92,13 @@ interface Star {
   a: number; // angle from the vanishing point
   r0: number; // base radius seed (0..1) — spreads stars off the exact center
   z: number; // depth 0 (far) → 1 (near camera)
-  s: number; // per-star speed jitter
-  g: number; // per-star glyph seed (0..1) — decorrelates char + size jitter
+  s: number; // per-star speed jitter (z-rate variation — each approaches at its own pace)
+  da: number; // per-star angular drift (rad/dt) — curves the radial heading, signed
+  wf: number; // per-star wobble frequency (phase advance per dt)
+  wph: number; // per-star wobble phase (radians) — re-rolled on respawn
+  wamp: number; // per-star wobble amplitude (fraction of maxR), depth-scaled
+  g: number; // per-star accent seed (0..1) — gates the gilt/redwood flecks
+  gi: number; // per-star glyph index into GLYPHS — re-rolled on switch + respawn
   k: number; // per-star size jitter (~0.75..1.35) so sizes aren't uniform rings
   b: number; // per-star brightness seed (0..1) — widens the alpha spread off-ramp
   h: number; // per-star hue seed (0..1) — biases the reddish-gradient blend
@@ -189,6 +215,7 @@ export default function AsciiField({
     let H = 0; // CSS px height
     let stars: Star[] = [];
     let raf = 0;
+    let disposed = false; // set on cleanup; guards the async font-ready repaint
     let last = 0; // ms timestamp of the last rendered frame (rAF throttle)
     const FRAME_MS = 1000 / 30; // ~30fps cap
 
@@ -197,15 +224,16 @@ export default function AsciiField({
       // NOT the rendered refSize — so the ~3x size bump doesn't shrink the count.
       // Capped so an ultrawide monitor can't spawn an unbounded glyph count.
       //
-      // DENSITY: the previous pass was ~2x too dense (desktop fill 0.17). This
-      // pass HALVES the field on both surfaces — desktop 0.17→0.085, mobile
-      // 0.085→0.0425 — back to the earlier, sparser look; caps halved to match
-      // (3400→1700 desktop, 1040→520 mobile). Sparser frees up headroom to push
-      // per-glyph brightness + the host opacity UP without crowding the copy.
+      // DENSITY: the field was HALVED to the sparser look, then ×0.7, ×0.8, ×0.8
+      // on both surfaces; desktop then cut another ~20% (×0.8) — 0.0381→0.0305,
+      // cap 762→610. Mobile got +50% (×1.5) twice — 0.019→0.0285→0.0428, cap
+      // 233→350→525 — since the smaller phone field had thinned out too far; it
+      // now exceeds desktop density, still capped lower so low-power devices stay
+      // smooth.
       const cellsW = W / countCell;
       const cellsH = H / (countCell * 1.05);
-      const fill = isMobile ? 0.0425 : 0.085;
-      const cap = isMobile ? 520 : 1700;
+      const fill = isMobile ? 0.0428 : 0.0305;
+      const cap = isMobile ? 525 : 610;
       const target = Math.max(1, Math.min(cap, Math.round(cellsW * cellsH * fill)));
       stars = new Array(target);
       for (let i = 0; i < target; i++) {
@@ -213,8 +241,13 @@ export default function AsciiField({
           a: Math.random() * Math.PI * 2,
           r0: Math.random(),
           z: Math.random(),
-          s: 0.6 + Math.random() * 0.8,
+          s: 0.5 + Math.random() * 1.0,
+          da: (Math.random() - 0.5) * 0.005,
+          wf: 0.06 + Math.random() * 0.18,
+          wph: Math.random() * Math.PI * 2,
+          wamp: 0.02 + Math.random() * 0.04,
           g: Math.random(),
+          gi: (Math.random() * GLYPHS.length) | 0,
           k: 0.75 + Math.random() * 0.6,
           b: Math.random(),
           h: Math.random(),
@@ -250,11 +283,18 @@ export default function AsciiField({
           // Accelerate outward: nearer (higher z) stars move faster — the
           // hallmark of a perspective fly-through.
           st.z += dt * st.s * (0.004 + st.z * 0.02);
+          // Per-star path variation: drift the heading and advance the wobble
+          // phase as the star travels, so its x/y trajectory is its own.
+          st.a += st.da * dt;
+          st.wph += st.wf * dt;
           if (st.z >= 1) {
             st.z -= 1;
             st.a = Math.random() * Math.PI * 2;
             st.r0 = Math.random() * 0.22; // respawn near the vanishing point
+            st.da = (Math.random() - 0.5) * 0.005; // fresh heading drift
+            st.wph = Math.random() * Math.PI * 2; // fresh wobble phase
             st.g = Math.random();
+            st.gi = (Math.random() * GLYPHS.length) | 0; // fresh glyph on respawn
             st.k = 0.75 + Math.random() * 0.6;
             st.b = Math.random(); // fresh brightness draw so the spread stays lively
             st.h = Math.random(); // fresh hue draw along the reddish gradient
@@ -267,8 +307,17 @@ export default function AsciiField({
 
         // perspective projection: radius grows with z toward the camera.
         const rr = (st.r0 + st.z) * maxR;
-        const px = ccx + Math.cos(st.a) * rr;
-        const py = ccy + Math.sin(st.a) * rr * 0.62; // squash for aspect
+        // PER-CHARACTER PATH VARIATION: a depth-scaled perpendicular wobble makes
+        // each glyph weave on its own trajectory (st.da above also curves its
+        // heading), so they don't all march one dead-straight radial line. The
+        // offset is taken along the perpendicular (-sin a, cos a) of the radial
+        // heading and grows with depth → reads as 3D parallax, yet stays small so
+        // the field still flies toward the viewer.
+        const ca = Math.cos(st.a);
+        const sa = Math.sin(st.a);
+        const wob = Math.sin(st.wph) * st.wamp * depth * maxR;
+        const px = ccx + ca * rr - sa * wob;
+        const py = ccy + (sa * rr + ca * wob) * 0.62; // squash for aspect
         if (px < -16 || px > W + 16 || py < -16 || py > H + 16) continue;
 
         // SIZE VARIANCE (now ~3x larger): refSize is ~3x the prior reference
@@ -289,10 +338,16 @@ export default function AsciiField({
         const bright = depth * 0.5 + bseed * 0.5; // 0..1, weighted toward bright
         const alpha = Math.min(1, 0.14 + bright * 0.92); // ~0.14 (dim) .. 1.0 (bright)
 
-        const gi = Math.min(RAMP.length - 1, Math.floor((depth * 0.7 + st.g * 0.3) * RAMP.length));
-        const ch = RAMP[gi];
+        // GLYPH SWITCHING: while marching, a live star occasionally flips to a
+        // different Burmese character so the field shimmers between glyphs rather
+        // than holding one. Rare per frame (SWITCH_P) → a gentle cycle, not noise.
+        // Skipped on the static (dt === 0) frame so reduced-motion stays still.
+        if (dt > 0 && Math.random() < SWITCH_P) {
+          st.gi = (Math.random() * GLYPHS.length) | 0;
+        }
+        const ch = GLYPHS[st.gi];
 
-        ctx!.font = `${size.toFixed(1)}px monospace`;
+        ctx!.font = `${size.toFixed(1)}px ${FONT_STACK}`;
         ctx!.globalAlpha = alpha;
         // COLOR — reddish gradient: the warm-ramp lookup blends parchment toward
         // the redwood family by depth + vertical screen position + the per-star
@@ -341,6 +396,19 @@ export default function AsciiField({
     resize();
     render(0); // initial static frame (dense + size-varied even before motion)
 
+    // Canvas does NOT trigger webfont loads, so the first paint(s) above may use a
+    // fallback face. Explicitly load Noto Sans Myanmar (declared in Layout.astro)
+    // and repaint the static frame once it resolves so the Burmese glyphs land —
+    // the rAF loop (when running) picks the loaded font up on its own next frame.
+    if (document.fonts && typeof document.fonts.load === 'function') {
+      document.fonts
+        .load('32px "Noto Sans Myanmar"', GLYPHS.slice(0, 12).join(''))
+        .then(() => {
+          if (!disposed) render(0);
+        })
+        .catch(() => {});
+    }
+
     // Pause the loop when the field scrolls out of view.
     let io: IntersectionObserver | null = null;
     if (!reduceMotion) {
@@ -363,6 +431,7 @@ export default function AsciiField({
     ro.observe(host);
 
     return () => {
+      disposed = true;
       stop();
       ro.disconnect();
       io?.disconnect();

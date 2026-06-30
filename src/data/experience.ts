@@ -12,16 +12,17 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
   {
-    role: 'Senior Software Engineer / Architect',
+    role: 'Senior Software Engineer / Founding Engineer',
     company: 'Stealth Startup',
     location: 'Remote',
     dateRange: 'May 2026 — Present',
+    note: 'Fintech · P2P SaaS',
     bullets: [
-      'Architected a multi-tenant procure-to-pay platform rebuild, delivered end-to-end through a multi-agent AI workflow tailored to the company\'s repositories.',
-      'Released a project-agnostic, standalone version of that workflow as the open-source "Maung\'s Agentic Toolbelt" — 16 agents and 9 skills that take work from a raw idea to a security-reviewed, merge-ready pull request, the general-purpose counterpart to the company-tailored configuration — routing planning, implementation, review, and resolution across dedicated agents with strict planner/implementer separation and MCP integrations for GitHub and Playwright.',
-      'Engineered adversarial evaluation loops for LLM-generated plans and code — zero-context reviewer agents, rubric-scored verdicts, and a bounded diagnose-vs-refute debate that blocks unconfirmed bug diagnoses.',
-      'Enforced zero-regression quality gates on AI-generated code: RuboCop, Vite, and a 790+-example RSpec suite in pre-commit hooks and CI; authored 10 Playwright browser-automation playbooks.',
-      'Shipped to production: 23 CI-gated PRs and 50+ commits in the first 3 weeks — a 22-model Rails 8 domain (vendors, purchase orders, default-deny RBAC) with a ~2:1 spec-to-code ratio.',
+      'Architect and a founding engineer building a multi-tenant procure-to-pay platform from an empty repository to production — 30+ Rails 8 models and a Stripe Custom Connect payments engine spanning multi-tenancy, default-deny RBAC, vendor management, purchase orders, invoice automation, chart of accounts, and double-entry journals, across 40+ reviewed, CI-gated pull requests.',
+      'Built the core backend hands-on: a database-driven, default-deny authorization layer (Pundit); tokenized vendor onboarding, funding methods, virtual cards, and webhook reconciliation; and reusable primitives for gap-free document numbering, soft-deletes, and audit logging — with strict cross-organization data isolation and encrypted sensitive records.',
+      'Delivered the platform end-to-end through a self-designed multi-agent AI workflow on Claude Code — 13 archetyped agents carry each feature from concept through planning, implementation, and pull-request review, with fresh-context reviewers adversarially grading every plan and PR against a fixed rubric behind human-gated approval on commits and risky database migrations.',
+      'Released a project-agnostic version of that wcan orkflow as the open-source "Maung\'s Agentic Toolbelt" — 16 agents and 9 skills that take work from a raw idea to a security-reviewed, merge-ready pull request, with strict planner/implementer separation and MCP integrations for GitHub and Playwright.',
+      'Enforced zero-regression quality gates on AI-generated code: a 2,200+-example RSpec suite at a ~2:1 test-to-code ratio, plus linting and build, run on every commit and push and mirrored exactly in CI.',
     ],
   },
   {
@@ -31,19 +32,33 @@ export const experience: ExperienceEntry[] = [
     dateRange: 'Apr 2023 — Feb 2026',
     note: 'Promoted from QA Analyst',
     bullets: [
-      'Built and shipped web application features end-to-end with React, AngularJS, and Ruby on Rails on a SaaS platform processing millions of dollars in daily payments — 1,670+ commits and 27,000+ lines of code.',
-      'Designed RESTful and SOAP integrations for the Corpay/NVP payment pipeline (125+ modifications): virtual card data polling, transaction status synchronization, and settlement workflows via Comdata APIs.',
-      'Scaled invoice ingestion from 5,000 to 300,000 records per batch with an SFTP-based upsert pipeline — Sidekiq background jobs, PostgreSQL indexing, duplicate detection, and concurrency controls.',
-      'Instrumented critical payment paths with Honeybadger, Datadog, and CloudWatch; resolved production hotfixes with rapid turnaround and mentored new engineering hires on architecture and payment workflows.',
+      'Took full ownership of the file-integration system — the platform\'s most critical pipeline — on a SaaS processing millions of dollars in payments daily for clients up to enterprise scale; delivered 1,670+ commits, 250+ tickets, and 27,000+ lines across Rails, AngularJS, React, and Cypress.',
+      'Scaled the bulk invoice-ingestion pipeline from 5,000 to 300,000 records per batch — parallel Sidekiq workers parse and de-duplicate rows, build invoices, and link them to a single source-document payment, tuned with database indexing, uniqueness constraints, and job-level concurrency controls.',
+      'Built and maintained the Corpay/NVP payment-processor integration (125+ changes via REST and SOAP): posting approved payments, reconciling both systems through webhook-driven polling, and issuing vendor virtual cards via Comdata — instrumented end to end with Honeybadger, Datadog, and CloudWatch.',
+      'Resolved a SEV-1 payment-routing incident in an all-hands response — a batch had routed a customer\'s full ~$500K to a single vendor; traced it through CloudWatch and voided every transaction before funds left the originating account, then hardened multi-vendor chunking with pre-production verification.',
+      'Reviewed ~400 pull requests as a primary reviewer, mentored new engineering hires on architecture and payment workflows, and partnered with product owners and stakeholders to translate business requirements into technical solutions.',
     ],
   },
   {
-    role: 'Full-Stack Developer (Intern)',
-    company: 'HCDL',
-    location: 'San Francisco, CA (Remote)',
-    dateRange: 'Oct 2022 — Jan 2023',
+    role: 'Pit Crew Operator',
+    company: 'Cruise',
+    location: 'San Francisco, CA',
+    dateRange: 'Feb 2023 — Apr 2023',
+    note: 'Autonomous Vehicles',
     bullets: [
-      'Built a full-stack web app with React, Node.js/Express, and MySQL: Bcrypt/JWT authentication, AWS RDS persistence, and RESTful API integrations including the Geisinger API.',
+      'Ran daily readiness inspections on autonomous vehicles ahead of self-driving reliability testing, keeping the test fleet operational and on schedule.',
+      'Synced each vehicle\'s onboard software to the correct development branch before AV runs and proactively surfaced issues that could disrupt testing.',
+    ],
+  },
+  {
+    role: 'Solar Test Technician',
+    company: 'PV Evolution Labs (PVEL)',
+    location: 'Berkeley, CA',
+    dateRange: 'Jun 2019 — Jul 2020',
+    note: 'Night-Shift Lead',
+    bullets: [
+      'Night-shift lead for a reliability-testing team — ran performance and durability tests on solar equipment, validated measurement data, logged it to a structured database, and re-ran tests when results fell outside tolerance.',
+      'Trained junior technicians on test procedures and result logging, and co-built a sorting system that streamlined intake, organization, and export of solar panels and equipment.',
     ],
   },
   {
@@ -53,7 +68,8 @@ export const experience: ExperienceEntry[] = [
     dateRange: 'Jun 2018 — Jun 2023',
     veteran: true,
     bullets: [
-      'Held U.S. Government Secret security clearance; trained personnel on confidential electro-optical systems.',
+      'Held a U.S. Government Secret security clearance (since expired) and trained military personnel on confidential electro-optical systems — thermals, night vision, and laser rangefinders valued from thousands to hundreds of thousands of dollars.',
+      'Tested and repaired thermal and laser optics with military test equipment and technical manuals, replacing components to return equipment to optimal performance.',
     ],
   },
 ];

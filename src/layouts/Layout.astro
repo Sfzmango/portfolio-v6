@@ -63,6 +63,15 @@ const canonical = new URL(base, Astro.site ?? 'https://sfzmango.github.io');
       data-font-swap
       href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=VT323&display=swap"
     />
+    <!-- Noto Sans Myanmar — Burmese glyphs for the Hero ASCII starfield. AsciiField.tsx
+         draws these on <canvas>, which does NOT trigger webfont loads, so it awaits
+         document.fonts before painting (this sheet just makes the face available). -->
+    <link
+      rel="preload"
+      as="style"
+      data-font-swap
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600&display=swap"
+    />
     <script is:inline>
       // Flip each preloaded font sheet to a render-applied stylesheet without
       // blocking first paint. Idempotent + null-safe.
@@ -82,6 +91,10 @@ const canonical = new URL(base, Astro.site ?? 'https://sfzmango.github.io');
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=VT323&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600&display=swap"
       />
     </noscript>
 

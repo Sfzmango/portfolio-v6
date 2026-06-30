@@ -18,8 +18,10 @@ const resumeHref = asset('/maung-htike-resume.pdf');
          This pass: density HALVED + per-glyph brightness raised in AsciiField,
          so the wrapper opacity is raised 0.34→0.62 to make the reddish/gilt
          field clearly MORE visible. The radial scrim below + the field staying
-         behind -z-10 keep the hero name/role/CTA fully legible. -->
-    <AsciiField client:idle cell={38} accent={0.07} speed={0.7} cx={0.5} cy={0.46} />
+         behind -z-10 keep the hero name/role/CTA fully legible.
+         speed 0.9 (glyph count cut in AsciiField to keep mobile/low-power
+         devices smooth). -->
+    <AsciiField client:idle cell={38} accent={0.07} speed={0.9} cx={0.5} cy={0.46} />
   </div>
   <!-- warm dusk scrim keeps hero copy legible over the (now brighter) field.
        Center protection deepened slightly (0.30→0.42) so the name/role/CTA hold
@@ -50,8 +52,8 @@ const resumeHref = asset('/maung-htike-resume.pdf');
       </p>
 
       <p class="reveal mt-6 max-w-xl text-fluid-base text-ink-muted" style="transition-delay:180ms;">
-        Production software at the intersection of fintech precision and agentic AI —
-        from B2B payments infrastructure to multi-agent orchestration pipelines.
+        Production software where fintech precision meets agentic AI — from B2B payments
+        moving millions of dollars daily to a multi-agent platform architected end-to-end.
       </p>
 
       <div class="reveal mt-9 flex flex-wrap items-center gap-3" style="transition-delay:240ms;">

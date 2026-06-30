@@ -41,11 +41,13 @@ import { identity } from '../data/skills';
                 <span class="font-mono text-fluid-xs text-ink-muted">({job.note})</span>
               )}
             </div>
-            <ul class="flex flex-col gap-2">
+            <ul class="flex flex-col gap-3">
               {job.bullets.map((b) => (
-                <li class="relative pl-5 text-fluid-sm leading-relaxed text-ink-muted">
-                  <span class="absolute left-0 top-[0.55em] h-1.5 w-1.5 rounded-full bg-accent/60" aria-hidden="true" />
-                  {b}
+                <li class="flex items-start gap-2.5 text-fluid-sm leading-relaxed text-ink-muted">
+                  <span class="mt-[0.15em] shrink-0 select-none text-accent" aria-hidden="true">▸</span>
+                  {/* pl + equal negative text-indent: first line stays flush, every
+                      wrapped line shifts right by the indent for a clearer block. */}
+                  <span class="pl-5 [text-indent:-1.25rem]">{b}</span>
                 </li>
               ))}
             </ul>
